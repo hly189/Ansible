@@ -18,22 +18,22 @@
         - proto: all
           type: all
           cidr_ip: 0.0.0.0/0
-    register: ec2_firewall
+    register: basic_firewall
 
   - name: create an EC2 instance
     ec2:
       key_name: hoa_ly
       region: us-west-2
-      group_id: "{{ec2_firewall.group_id}}"
+      group_id: "{{basic_firewall.group_id}}"
       instance_type: t2.micro
       image: ami-63b25203
-      instance_tags: '{"Name": "example"}'
       wait: yes
-      volumes:
-      - device_name: /dev/sda1
-        device_type: gp2
-        volume_size: 5
-        delete_on_termination: true
+      count: 1
+      #volumes:
+      #- device_name: /dev/sda1
+      #  device_type: gp2
+      #  volume_size: 5
+      #  delete_on_termination: true
     register: ec2
 
   - debug: var=item
