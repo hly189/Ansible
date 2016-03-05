@@ -29,6 +29,11 @@
       image: ami-63b25203
       instance_tags: '{"Name": "example"}'
       wait: yes
+      volumes:
+      - device_name: /dev/sda1
+        device_type: gp2
+        volume_size: 5
+        delete_on_termination: true
     register: ec2
 
   - debug: var=item
