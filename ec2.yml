@@ -24,7 +24,7 @@
     ec2:
       key_name: hoa_ly
       region: us-west-2
-      group_id: "{{ec2_firewall..group_id}}"
+      group_id: "{{ec2_firewall.group_id}}"
       instance_type: t2.micro
       image: ami-63b25203
       instance_tags: '{"Name": "example"}'
