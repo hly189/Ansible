@@ -1,0 +1,26 @@
+---
+# tasks file for roles/Jenkins
+
+- name: Ensure that Java is present
+  yum: name={{ jenkins_jdk }} state=present
+
+- name: Add Jenkins repository
+  get_url: url=http://pkg.jenkins-ci.org/redhat/jenkins.repo
+           dest=/etc/yum.repos.d/jenkins.repo mode=0644
+
+- name: Import Jenkins key
+  command: rpm --import http://pkg.jenkins-ci.org/redhat/jenkins-ci.org.key
+
+- name: Install httpd
+  yum: name=httpd state=present
+
+- name: Install Jenkins
+  yum: name=jenkins state=present
+
+- name: Run Jenkins
+  sudo: yes
+  service: name=jenkins state=running enabled=true
+
+- name: Jenkins on
+  sudo: yes 
+  command: chkconfig jenkins on

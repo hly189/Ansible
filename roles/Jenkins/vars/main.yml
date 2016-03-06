@@ -1,0 +1,4 @@
+---
+# vars file for roles/Jenkins
+
+jenkins_jdk: java-1.8.0-openjdk

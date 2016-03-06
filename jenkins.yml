@@ -1,0 +1,5 @@
+---
+- hosts: production
+  sudo: true
+  roles:
+   - { role: Jenkins, tags: [ci,jenkins] }
