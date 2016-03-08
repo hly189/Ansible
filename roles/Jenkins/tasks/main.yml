@@ -1,26 +1,47 @@
 ---
 # tasks file for roles/Jenkins
+- name: Demo 
+  command: mkdir {{ inventory_hostname }}
 
-- name: Ensure that Java is present
-  yum: name={{ jenkins_jdk }} state=present
+- name: Install python software probperties
+  apt: name=python-software-properties state=installed update_cache=yes cache_valid_time=86400
+
+- name: Install necessary things such as git, java, python and apache
+  apt: name={{ item }} state=installed
+  with_items:
+  - 'python-pycurl'
+  - 'openjdk-7-jre'
+  - 'openjdk-7-jdk'
+  - 'git'
+  - 'curl'
+  - 'apache2'
+
+- name: Add Jenkine keys 
+  apt_key: url=https://jenkins-ci.org/debian/jenkins-ci.org.key state=present
 
 - name: Add Jenkins repository
-  get_url: url=http://pkg.jenkins-ci.org/redhat/jenkins.repo
-           dest=/etc/yum.repos.d/jenkins.repo mode=0644
-
-- name: Import Jenkins key
-  command: rpm --import http://pkg.jenkins-ci.org/redhat/jenkins-ci.org.key
-
-- name: Install httpd
-  yum: name=httpd state=present
+  apt_repository: repo='deb http://pkg.jenkins-ci.org/debian binary/' state=present update_cache=yes
 
 - name: Install Jenkins
-  yum: name=jenkins state=present
+  apt: name=jenkins update_cache=yes force=yes state=latest
+  register: jenkins_instal
 
-- name: Run Jenkins
+- name: Enable Apache proxy
   sudo: yes
-  service: name=jenkins state=running enabled=true
+  command: a2enmod proxy
 
-- name: Jenkins on
+- name: Enable Apache proxy http
+  sudo: yes
+  command: a2enmod proxy_http
+
+- name: Configuration of jenkins.conf
+  sudo: yes
+  template: src=jenkins.conf.j2 dest=/etc/apache2/sites-available/jenkins.conf
+
+- name: Enable Jenkins
   sudo: yes 
-  command: chkconfig jenkins on
+  command: a2ensite jenkins
+
+- name: Reload Apache
+  sudo: yes
+  service: name=apache2 state=reloaded

@@ -1,5 +1,6 @@
 ---
 - hosts: production
   sudo: true
-  roles:
+  remote_user: ubuntu
+  roles: 
    - { role: Jenkins, tags: [ci,jenkins] }

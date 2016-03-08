@@ -4,17 +4,28 @@
   gather_facts: False 
 
   tasks:
+  #- name: adding key to 
+  #  ec2_key: 
+  #    name: hoa_ly3
+  #    key_material: "{{ item }}"
+  #    region: us-west-2
+  #  with_file: ~/.ssh/id_rsa.pub
   - name: ssh security group
     ec2_group:
       name: launch-wizard-8
       description: Allow ssh access
       region: us-west-2
       rules:
-        - proto: tcp
-          type: ssh
-          from_port: 22
-          to_port: 22
-          cidr_ip: 0.0.0.0/0
+       - proto: tcp
+         type: ssh
+         from_port: 22
+         to_port: 22
+         cidr_ip: 0.0.0.0/0
+       - proto: tcp
+         type: http
+         from_port: 80
+         to_port: 80
+         cidr_ip: 0.0.0.0/0
       rules_egress:
         - proto: all
           type: all
@@ -28,7 +39,7 @@
       group_id: "{{ec2_firewall.group_id}}"
       instance_tags: { "Name":"example" }
       instance_type: t2.micro
-      image: ami-63b25203
+      image: ami-9abea4fb
       wait: yes
       count: 1
     register: ec2
@@ -39,10 +50,8 @@
   - name: add the instance to web and production groups
     local_action: add_host hostname={{ item.public_dns_name }}
                   groupname=production
-                  ansible_ssh_user=ec2-user
+                  ansible_ssh_user=ubuntu
     with_items: ec2.instances
-    
-
 
   - name: Wait for the instances to boot by checking the ssh port
     wait_for: host={{item.public_ip}} port=22 delay=60 timeout=320 state=started
@@ -51,4 +60,4 @@
   - name: Create a volume and attach
     ec2_vol: volume_type=gp2 region=us-west-2 volume_size=5 instance={{item.id}}
     with_items: ec2.instances
-  
+
