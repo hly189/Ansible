@@ -33,19 +33,13 @@
     when: INSTANCE_TYPE is undefined
 
   tasks:
-  #- name: adding key to 
-  #  ec2_key: 
-  #    name: hoa_ly3
-  #    key_material: "{{ item }}"
-  #    region: us-west-2
-  #  with_file: ~/.ssh/id_rsa.pub
   - name: create an EC2 instance
     ec2:
       aws_access_key: "{{ AWS_ACCESS_KEY }}"
       aws_secret_key: "{{ AWS_SECRECT_KEY }}"
       key_name: "{{ KEY }}"
       region: "{{ REGION }}"
-      instance_tags: { "Name":"example" }
+      instance_tags: { "Name":"{{ MACHINE_NAME }}" }
       instance_type: "{{ INSTANCE_TYPE }}"
       image: "{{ AMI }}"
       vpc_subnet_id: "{{ SUBNET_ID }}"
