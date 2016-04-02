@@ -3,8 +3,8 @@
   connection: local
   gather_facts: False
 
-  vars:
-  - KEY: hoa_ly
+  vars_files:
+  - key.yml
  
   vars_prompt:
   - name: MACHINE_NAME
@@ -41,6 +41,8 @@
   #  with_file: ~/.ssh/id_rsa.pub
   - name: create an EC2 instance
     ec2:
+      aws_access_key: "{{ AWS_ACCESS_KEY }}"
+      aws_secret_key: "{{ AWS_SECRECT_KEY }}"
       key_name: "{{ KEY }}"
       region: "{{ REGION }}"
       instance_tags: { "Name":"example" }
