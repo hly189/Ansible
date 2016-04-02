@@ -1,7 +1,36 @@
 - name: Create AWS resources
   hosts: localhost
   connection: local
-  gather_facts: False 
+  gather_facts: False
+
+  vars:
+  - KEY: hoa_ly
+ 
+  vars_prompt:
+  - name: MACHINE_NAME
+    prompt: "Please Enter machine name: "
+    private: no
+    when: MACHINE_NAME is undefined 
+ 
+  - name: REGION
+    prompt: "Enter Region of this instance: "
+    private: no
+    when: REGION is undefined
+
+  - name: SUBNET_ID
+    prompt: "Enter SUBNET ID for this instance: "
+    private: no
+    when: SUBNET_ID is undefined
+
+  - name: AMI
+    prompt: "Enter ami of the instance: "
+    private: no
+    when: AMI is undefine
+
+  - name: INSTANCE_TYPE
+    prompt: "Instance type (ex: t1.micro, c1.large, etc): "
+    private: no
+    when: INSTANCE_TYPE is undefined
 
   tasks:
   #- name: adding key to 
@@ -10,36 +39,14 @@
   #    key_material: "{{ item }}"
   #    region: us-west-2
   #  with_file: ~/.ssh/id_rsa.pub
-  - name: ssh security group
-    ec2_group:
-      name: launch-wizard-8
-      description: Allow ssh access
-      region: us-west-2
-      rules:
-       - proto: tcp
-         type: ssh
-         from_port: 22
-         to_port: 22
-         cidr_ip: 0.0.0.0/0
-       - proto: tcp
-         type: http
-         from_port: 80
-         to_port: 80
-         cidr_ip: 0.0.0.0/0
-      rules_egress:
-        - proto: all
-          type: all
-          cidr_ip: 0.0.0.0/0
-    register: ec2_firewall
-
   - name: create an EC2 instance
     ec2:
-      key_name: hoa_ly
-      region: us-west-2
-      group_id: "{{ec2_firewall.group_id}}"
+      key_name: "{{ KEY }}"
+      region: "{{ REGION }}"
       instance_tags: { "Name":"example" }
-      instance_type: t2.micro
-      image: ami-9abea4fb
+      instance_type: "{{ INSTANCE_TYPE }}"
+      image: "{{ AMI }}"
+      vpc_subnet_id: "{{ SUBNET_ID }}"
       wait: yes
       count: 1
     register: ec2
@@ -55,9 +62,5 @@
 
   - name: Wait for the instances to boot by checking the ssh port
     wait_for: host={{item.public_ip}} port=22 delay=60 timeout=320 state=started
-    with_items: ec2.instances
-
-  - name: Create a volume and attach
-    ec2_vol: volume_type=gp2 region=us-west-2 volume_size=5 instance={{item.id}}
     with_items: ec2.instances
 
