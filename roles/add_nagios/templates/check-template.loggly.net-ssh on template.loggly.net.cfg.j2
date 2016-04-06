@@ -1,0 +1,13 @@
+define service {
+        check_command                  check_tcp!22
+        notification_period            24x7
+        notes                          Command: check_tcp!22
+        passive_checks_enabled         0
+        use                            base-service
+        host_name                      {{ MACHINE_NAME }}.loggly.net
+        active_checks_enabled          1
+        service_description            ssh tcp for {{ MACHINE_NAME }}.loggly.net
+        contact_groups                 techops_and_pager
+        max_check_attempts             3
+        is_volatile                    0
+}

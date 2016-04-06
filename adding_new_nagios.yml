@@ -1,0 +1,16 @@
+---
+- hosts: webserver
+  sudo: yes
+  vars_prompt:
+  - name: "target"
+    prompt: "Enter nagios server-name (target) (example., nagios-east, nagios-west)"
+    private: no
+    when: target is undefined
+  
+  - name: "MACHINE_NAME"
+    prompt: "Enter name for the machine (MACHINE_NAME) to be added to nagios (make sure the machine is in /etc/hosts): "
+    private: no
+    when: MACHINE_NAME is undefined  
+ 
+  roles:
+  - add_nagios 

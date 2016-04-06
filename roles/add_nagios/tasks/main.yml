@@ -1,0 +1,15 @@
+---
+- name: Create {{ MACHINE_NAME }}.loggly.net.cfg.j2 in /etc/nagios3/hosts.d
+  template: 
+    src: check-template.loggly.net.cfg.j2
+    dest: /etc/nagios3/hosts.d/{{MACHINE_NAME}}.loggly.net.cfg
+
+- name: Create basic tests to /etc/nagios3/checks.d
+  template: src={{item.src}} dest={{item.dest}}
+  with_items:
+  - { src: 'check-template.loggly.net-cpu percentage used on template.loggly.net.cfg.j2', dest: '/etc/nagios3/checks.d/{{ MACHINE_NAME }}.loggly.net-cpu percentage used on {{MACHINE_NAME }}.loggly.net.cfg' }
+  - { src: 'check-template.loggly.net-disk space on template.loggly.net.cfg.j2', dest: '/etc/nagios3/checks.d/{{ MACHINE_NAME }}.loggly.net-disk space on {{ MACHINE_NAME }}.loggly.net.cfg' }
+  - { src: 'check-template.loggly.net-load average on template.loggly.net.cfg.j2', dest: '/etc/nagios3/checks.d/{{ MACHINE_NAME }}.loggly.net-load average on {{ MACHINE_NAME }}.loggly.net.cfg' }
+  - { src: 'check-template.loggly.net-ntp process on template.loggly.net.cfg.j2', dest: '/etc/nagios3/checks.d/{{ MACHINE_NAME }}.loggly.net-ntp process on {{ MACHINE_NAME }}.loggly.net.cfg' }
+  - { src: 'check-template.loggly.net-ssh on template.loggly.net.cfg.j2', dest: '/etc/nagios3/checks.d/{{ MACHINE_NAME }}.loggly.net-ssh on {{ MACHINE_NAME }}.loggly.net.cfg' }
+  - { src: 'check-template.loggly.net-memory usage on template.loggly.net.cfg.j2', dest: '/etc/nagios3/checks.d/{{ MACHINE_NAME }}.loggly.net-memory usage on {{ MACHINE_NAME }}.loggly.net.cfg' }

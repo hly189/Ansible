@@ -1,0 +1,14 @@
+define service {
+        check_command                  remotecheck!check-mem
+        notification_period            24x7
+        notes                          NRPE: check_nrpe -H {{ MACHINE_NAME }}.loggly.net -t 600 -c check-mem
+        passive_checks_enabled         0
+        use                            base-service
+        host_name                      {{ MACHINE_NAME }}.loggly.net
+        active_checks_enabled          1
+        service_description            memory usage on {{ MACHINE_NAME }}.loggly.net
+        contacts                       techops
+        max_check_attempts             3
+        is_volatile                    0
+}
+

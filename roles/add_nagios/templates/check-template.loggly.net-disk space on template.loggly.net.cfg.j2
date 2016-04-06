@@ -1,0 +1,14 @@
+define service {
+        check_command                  remotecheck!check-disk-space
+        notification_period            24x7
+        notes                          NRPE: check_nrpe -H {{ MACHINE_NAME }}.loggly.net -t 600 -c check-disk-space
+        passive_checks_enabled         0
+        use                            base-service
+        host_name                      {{ MACHINE_NAME }}.loggly.net
+        active_checks_enabled          1
+        ## --PUPPET_NAME-- (called '_naginator_name' in the manifest)                disk space on {{ MACHINE_NAME }}.loggly.net
+        service_description            disk space on {{ MACHINE_NAME }}.loggly.net
+        contact_groups                 techops_and_pager
+        max_check_attempts             3
+        is_volatile                    0
+}
