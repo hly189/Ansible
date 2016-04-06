@@ -1,2 +1,0 @@
-[localhost]
-locahost ansible_python_interpreter=/usr/local/bin/python ansible_connection=local
