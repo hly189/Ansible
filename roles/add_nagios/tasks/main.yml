@@ -4,7 +4,7 @@
     src: check-template.loggly.net.cfg.j2
     dest: /etc/nagios3/hosts.d/{{MACHINE_NAME}}.loggly.net.cfg
 
-- name: debug
+- name: Getting IP Address
   debug: msg={{ ansible_eth0.ipv4.address }}
 
 - name: Create basic tests to /etc/nagios3/checks.d
