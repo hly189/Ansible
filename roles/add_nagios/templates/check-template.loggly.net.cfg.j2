@@ -1,6 +1,6 @@
 define host {
         use                             base-host
         host_name                       {{ MACHINE_NAME }}.loggly.net
-        alias                           {{ MACHINE_NAME }}.loggly.net (10.209.7.182)
-        address                         10.209.7.182
+        alias                           {{ MACHINE_NAME }}.loggly.net ({{ ansible_eth0.ipv4.address }})
+        address                         {{ ansible_eth0.ipv4.address }}
 }
