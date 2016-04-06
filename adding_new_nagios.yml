@@ -1,5 +1,5 @@
 ---
-- hosts: webserver
+- hosts: "{{target}}"
   sudo: yes
   vars_prompt:
   - name: "target"
