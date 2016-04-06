@@ -7,6 +7,9 @@
 - name: Getting IP Address
   debug: msg={{ ansible_eth0.ipv4.address }}
 
+- name: Adding IP Address to /etc/hosts
+  lineinfile: dest=/etc/hosts line='{{ ansible_eth0.ipv4.address }} {{MACHINE_NAME}}' state=present
+
 - name: Create basic tests to /etc/nagios3/checks.d
   template: src={{item.src}} dest={{item.dest}}
   with_items:
